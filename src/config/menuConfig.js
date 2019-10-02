@@ -16,7 +16,7 @@ const menuList = [
             },
             {
                 title: 'Items Manage',
-                key: '/items',
+                key: '/product',
                 icon: 'tool',
             }
         ]

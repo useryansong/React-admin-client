@@ -24,6 +24,7 @@ export default function ajax(url, data = {}, type = 'GET') {
         //2. if success, calling resolve
         promise.then(response => {
             resolve(response.data)
+            console.log(response.data)
         })
         //3. if failed, not calling reject, hinting abnormal message
     }).catch(error => {

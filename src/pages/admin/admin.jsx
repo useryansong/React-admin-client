@@ -6,7 +6,7 @@ import LeftNav from '../../components/left-nav/left-nav'
 import Header from '../../components/header/header'
 import Home from '../home/home'
 import Category from '../category/category'
-import Items from '../items/items'
+import Product from '../product/product'
 import Role from '../role/role'
 import Bar from '../charts/bar'
 import Line from '../charts/line'
@@ -42,7 +42,7 @@ export default class Admin extends Component {
                         <Switch>
                             <Route path='/home' component={Home}/>
                             <Route path='/category' component={Category}/>
-                            <Route path='/items' component={Items}/>
+                            <Route path='/product' component={Product}/>
                             <Route path='/role' component={Role}/>
                             <Route path='/user' component={User}/>
                             <Route path='/charts/bar' component={Bar}/>
