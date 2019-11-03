@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button, message } from 'antd';
+import { Form, Icon, Input, Button} from 'antd';
 import {Redirect} from 'react-router-dom'
-
+import {connect} from 'react-redux'
 import './login.less'
 import avatar from '../../assets/images/logo192.png'
-import { reqLogin } from '../../api/index'
-import memoryUtils from '../../utils/memoryUtils'
-import storageUtils from '../../utils/storageUtils'
+// import { reqLogin } from '../../api/index'
+// import memoryUtils from '../../utils/memoryUtils'
+// import storageUtils from '../../utils/storageUtils'
+import {login} from '../../redux/actions'
 
 /**
  * login router component
@@ -18,24 +19,28 @@ class Login extends Component {
         event.preventDefault()
         this.props.form.validateFields(async (err, values) => {
             //validation success
+            
             if (!err) {
                 //console.log('Received values of form: ', values);
                 const { username, password } = values
-                const result = await reqLogin(username, password)// {status:0 or 1, data: }
-                console.log('request success', result)
-                if (result.status === 0) {//login success
-                    message.success('login successully')
+                
+                // const result = await reqLogin(username, password)// {status:0 or 1, data: }
+                // if (result.status === 0) {//login success
+                //     message.success('login successully')
 
-                    //SAVE user
-                    const user = result.data
-                    memoryUtils.user = user // save in RAM
-                    storageUtils.saveUser(user) //save data in local
+                //     //SAVE user
+                //     const user = result.data
+                //     memoryUtils.user = user // save in RAM
+                //     storageUtils.saveUser(user) //save data in local
 
-                    //nav to admin page
-                    this.props.history.replace('/')
-                } else {//login failed
-                    message.error(result.msg)
-                }
+                //     //nav to admin page
+                //     this.props.history.replace('/home')
+                // } else {//login failed
+                //     message.error(result.msg)
+                // }
+
+                //request login in 
+                this.props.login(username,password)
             } else {
                 console.log('request failed')
 
@@ -49,13 +54,15 @@ class Login extends Component {
 
     render() {
         //if has aready login, nav to admin
-        const user = memoryUtils.user
-        if(!user) {
+        const user = this.props.user
+        if(user.username==="admin"&&user.password==="admin") {
             return (
-                <Redirect to='/'/>
+                <Redirect to='/home'/>
             )
         }
-
+        
+        const errorMsg = this.props.user.errorMsg
+        console.log(errorMsg)
         //receive the form function
         const form = this.props.form
         const { getFieldDecorator } = form
@@ -66,6 +73,7 @@ class Login extends Component {
                     <h1>Administration System</h1>
                 </header>
                 <section className="login-content">
+                    <div>{errorMsg}</div>
                     <h2>Sign in</h2>
                     <div>
                         <Form onSubmit={this.handleSubmit} className="login-form">
@@ -130,7 +138,10 @@ class Login extends Component {
  *  2). receive a component, then return a new component, the new component will give the special props to old component
  */
 const WrapLogin = Form.create()(Login)
-export default WrapLogin
+export default connect(
+    state => ({user: state.user}),
+    {login}
+)(WrapLogin)
 
 /**
  * 1.js-form-validation

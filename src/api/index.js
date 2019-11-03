@@ -34,6 +34,12 @@ export const reqSearchProduct = (productName) => ajax(BASE+'/manage/product/sear
 //update product status / On sale or Sold out
 export const reqUpdateStatus = (productId, status) => ajax(BASE + '/manage/product/updateStatus', {productId, status}, 'POST')
 
+//add product
+// export const reqAddOrProduct = (product) => ajax (BASE+'/manage/product/add', product,'POST')
+
+//modify product
+export const reqAddOrUpdateProduct = (product) => ajax (BASE+'/manage/product/'+(product._id?'update':'add'), product,'POST')
+
 //weather function
 export const reqWeather = (city) => {
 

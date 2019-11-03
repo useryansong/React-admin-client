@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import logo from '../../assets/images/logo192.png'
+import {setHeadTitle} from '../../redux/actions'
 import menuList from '../../config/menuConfig'
 import { Menu, Icon } from 'antd';
-
+import {connect} from 'react-redux'
 import './left-nav.less'
 
 const { SubMenu } = Menu;
@@ -46,10 +47,14 @@ class LeftNav extends Component {
     getMenuNodes = (menuList) => {
         return menuList.reduce((pre, item) => {
             //add <Menu.Item> or <SubMenu> to pre   
+            const path = this.props.location.pathname
             if (!item.children) {
+                if (item.key===path || path.indexOf(item.key)===0) {
+                    this.props.setHeadTitle(item.title)
+                }
                 pre.push((
                     <Menu.Item key={item.key}>
-                        <Link to={item.key}>
+                        <Link to={item.key} onClick={() => this.props.setHeadTitle(item.title)}>
                             <Icon type={item.icon} />
                             <span>{item.title}</span>
                         </Link>
@@ -105,4 +110,7 @@ class LeftNav extends Component {
  * withRouter high level component:
  * incluing a componnet which is not the router
  */
-export default withRouter(LeftNav)
+export default connect(
+    state => ({}),
+    {setHeadTitle}
+)(withRouter(LeftNav)) 

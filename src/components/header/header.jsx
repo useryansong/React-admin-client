@@ -1,13 +1,15 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import './header.less'
+import {connect} from 'react-redux'
 import {formateDate} from '../../utils/dateUtils'
-import memoryUtils from '../../utils/memoryUtils'
+// import memoryUtils from '../../utils/memoryUtils'
 import {reqWeather} from '../../api/index'
 import menuList from '../../config/menuConfig'
 import { Modal} from 'antd';
 import LinkButton from '../../components/link-button'
-import storageUtils from '../../utils/storageUtils'
+import {logout} from '../../redux/actions'
+// import storageUtils from '../../utils/storageUtils'
 
 
 class Header extends Component {
@@ -39,8 +41,8 @@ class Header extends Component {
             if (item.key === path) { // if current item's key is same with path, the tile of itme is what I need
                title = item.title
             }else if (item.children) {
-                //find matched in all children items
-                const cItem = item.children.find(cItem => cItem.key === path)
+                //find matched in all children items cItem.key === path
+                const cItem = item.children.find(cItem => path.indexOf(cItem.key)===0)
                 //if true, menas there is matched
                 if(cItem) {
                     //get title
@@ -58,11 +60,12 @@ class Header extends Component {
             title: 'Do you Want to log out?',
             onOk: () => {
               //delete user saved
-              storageUtils.removeUser()
-              memoryUtils.user= {}
+              
+              this.props.logout()
 
               //direct to login in
-              this.props.history.replace('/login')
+            // this.props.history.replace('/login')
+            
             }
           })
     }
@@ -84,8 +87,9 @@ class Header extends Component {
 
     render() {
         const {currentTime, main} = this.state
-        const username = memoryUtils.user.username
-        const title = this.getTitle()
+        const username = this.props.user.username
+        // const title = this.getTitle()
+        const title = this.props.headTitle
         return (
             <div className='header'>
                 <div className='header-top'>
@@ -107,4 +111,7 @@ class Header extends Component {
     }
 }
 
-export default withRouter(Header)
+export default connect(
+    state => ({headTitle: state.headTitle, user:state.user}),
+    {logout}
+)(withRouter(Header)) 

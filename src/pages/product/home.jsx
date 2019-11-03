@@ -56,7 +56,7 @@ export default class ProductHome extends Component {
                     return (
                         <span>
                             <LinkButton onClick={() => this.props.history.push('/product/detail', {product})}>Detail</LinkButton>
-                            <LinkButton>Modify</LinkButton>
+                            <LinkButton onClick={()=>this.props.history.push('/product/addupdate',product)}>Modify</LinkButton>
                         </span>
                     )
                 }
